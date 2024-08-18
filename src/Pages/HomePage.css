@@ -3,12 +3,14 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f0f4f8; /* Light blue-gray background */
+    background-image: linear-gradient(to top, #e8198b 0%, #c7eafd 100%);
+
   }
   
   .homepage-container {
     text-align: center;
     padding: 20px;
-    background-image: linear-gradient(to top, #e8198b 0%, #c7eafd 100%);
+    /* background-image: linear-gradient(to top, #e8198b 0%, #c7eafd 100%); */
     max-width: 1200px;
     margin: auto;
     border-radius: 15px;
@@ -52,24 +54,45 @@ body {
     cursor: pointer;
   }
   
+
+.image-parameters-section {
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.health-image {
+  width: 45%;
+  border-radius: 15px;
+  margin-right: 20px;
+}
+
   .parameters-section {
+    flex: 1;
     display: flex;
     justify-content: space-between;
-    margin: 40px 0;
-    font-size: 35px;
   }
   
   .parameters-list {
     list-style: none;
-    padding: 0;
-    font-size: 1.1em;
+    padding: 5px;
+    font-size: 2em;
     color: #333;
     text-align: left;
+    margin-top: 25px;
   }
   
   .parameters-list li {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
   }
+  
+  .parameters-list i {
+    margin-right: 10px;
+    color: #007BFF;
+  }
+  
   
   .video-section {
     margin-top: 40px;

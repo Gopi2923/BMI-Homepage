@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import QRCode from 'qrcode.react';
 import './HomePage.css';
 import logo from '../Assets/logo.png';
+import healthImage from '../Assets/backgroundimg01.jpg'; // Add your health-related image here
 
 const HomePage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -62,26 +63,30 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Parameters List */}
-      <div className="parameters-section">
-        <ul className="parameters-list left-list">
-          <li>Age</li>
-          <li>Height</li>
-          <li>Weight</li>
-          <li>Body Mass Index</li>
-          <li>Nutritional Status</li>
-          <li>Ideal Body Weight</li>
-          <li>Body Fat</li>
-        </ul>
-        <ul className="parameters-list right-list">
-          <li>Total Body Water</li>
-          <li>Basal Metabolic Rate</li>
-          <li>Fat Mass</li>
-          <li>Lean/Skeletal Body Mass</li>
-          <li>Overweight By</li>
-          <li>Recommendations</li>
-          <li>Your Lucky Message</li>
-        </ul>
+      {/* Image and Parameters List */}
+      <div className="image-parameters-section">
+        <img src={healthImage} alt="Health Check" className="health-image" />
+
+        <div className="parameters-section">
+          <ul className="parameters-list left-list">
+            <li><i className="fas fa-user"></i> Age</li>
+            <li><i className="fas fa-ruler-vertical"></i> Height</li>
+            <li><i className="fas fa-weight"></i> Weight</li>
+            <li><i className="fas fa-calculator"></i> Body Mass Index</li>
+            <li><i className="fas fa-apple-alt"></i> Nutritional Status</li>
+            <li><i className="fas fa-weight-hanging"></i> Ideal Body Weight</li>
+            <li><i className="fas fa-percentage"></i> Body Fat</li>
+          </ul>
+          <ul className="parameters-list right-list">
+            <li><i className="fas fa-water"></i> Total Body Water</li>
+            <li><i className="fas fa-burn"></i> Basal Metabolic Rate</li>
+            <li><i className="fas fa-weight"></i> Fat Mass</li>
+            <li><i className="fas fa-dumbbell"></i> Lean/Skeletal Body Mass</li>
+            <li><i className="fas fa-exclamation-circle"></i> Overweight By</li>
+            <li><i className="fas fa-clipboard-check"></i> Recommendations</li>
+            <li><i className="fas fa-star"></i> Your Lucky Message</li>
+          </ul>
+        </div>
       </div>
 
       {/* Video Section */}
