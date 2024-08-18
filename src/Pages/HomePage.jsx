@@ -4,11 +4,11 @@ import './HomePage.css';
 import logo from '../Assets/logo.png';
 
 const HomePage = () => {
-  const [showPayment, setShowPayment] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
 
   const handleInstantReportClick = () => {
-    setShowPayment(true);
+    setShowPaymentModal(true);
   };
 
   const handlePaymentConfirmation = () => {
@@ -18,6 +18,10 @@ const HomePage = () => {
 
   const redirectToAndroidApp = () => {
     window.location.href = 'intent://launch/#Intent;package=com.example.cowinbmi;end'; // Replace with the actual package name
+  };
+
+  const closeModal = () => {
+    setShowPaymentModal(false);
   };
 
   return (
@@ -31,21 +35,24 @@ const HomePage = () => {
       {/* Subheading */}
       <p className="subtitle">Check Your Vitals, Instant Report</p>
 
-      {!showPayment && (
-        <div className="instant-report-section">
-          <button className="instant-report-button" onClick={handleInstantReportClick}>
-            Get Instant Report
-          </button>
-        </div>
-      )}
+      <div className="instant-report-section">
+        <button className="instant-report-button" onClick={handleInstantReportClick}>
+          Get Instant Report Click Here
+        </button>
+      </div>
 
-      {showPayment && !paymentConfirmed && (
-        <div className="payment-section">
-          <h2>Pay 99 INR to Proceed</h2>
-          <QRCode value="http://example.com/payment" size={128} />
-          <button className="confirm-payment-button" onClick={handlePaymentConfirmation}>
-            Confirm Payment
-          </button>
+      {showPaymentModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Pay 99 INR to Proceed</h2>
+            <QRCode value="http://example.com/payment" size={328} />
+            <button className="confirm-payment-button" onClick={handlePaymentConfirmation}>
+              Confirm Payment
+            </button>
+            <button className="close-modal-button" onClick={closeModal}>
+              Close
+            </button>
+          </div>
         </div>
       )}
 
@@ -79,7 +86,16 @@ const HomePage = () => {
 
       {/* Video Section */}
       <div className="video-section">
-        <video src="/vitals-video.mp4" autoPlay loop muted className="video"></video>
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/Erhv6vECfPU?autoplay=1&loop=1&playlist=Erhv6vECfPU"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="video"
+        ></iframe>
       </div>
     </div>
   );

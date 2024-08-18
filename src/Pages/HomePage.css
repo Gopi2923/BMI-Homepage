@@ -8,7 +8,7 @@ body {
   .homepage-container {
     text-align: center;
     padding: 20px;
-    background-color: #ffffff; /* White background for the content */
+    background-image: linear-gradient(to top, #e8198b 0%, #c7eafd 100%);
     max-width: 1200px;
     margin: auto;
     border-radius: 15px;
@@ -20,13 +20,17 @@ body {
     width: 350px;
     margin: 20px auto;
     animation: fadeIn 2s ease-in-out;
+    border-radius: 300px;
   }
   
   .title {
     font-size: 3.5em;
-    color: #333;
+    color: #fff;
     margin-top: 10px;
+    padding: 30px;
     animation: slideIn 1.5s ease-in-out;
+    background-image: linear-gradient(to top, #cc208e 0%, #6713d2 100%);
+    border-radius: 50px;
   }
   
   .subtitle {
@@ -126,6 +130,65 @@ body {
     animation: fadeIn 1.5s ease-in-out;
   }
   
+  /* HomePage.css */
+
+.video {
+  width: 100%;
+  height: 554px;
+  max-width: 100%;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+/* HomePage.css */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 500px;
+}
+
+.confirm-payment-button,
+.close-modal-button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-modal-button {
+  background-color: #dc3545;
+  margin-left: 10px;
+}
+
+.confirm-payment-button:hover,
+.close-modal-button:hover {
+  background-color: #218838;
+}
+
+.close-modal-button:hover {
+  background-color: #c82333;
+}
+
   /* Rest of your existing CSS */
   
   @keyframes fadeIn {
