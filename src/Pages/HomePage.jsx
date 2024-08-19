@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import QRCode from 'qrcode.react';
 import './HomePage.css';
 import logo from '../Assets/logo.png';
-import healthImage from '../Assets/backgroundimg01.jpg'; // Add your health-related image here
+import healthImage from '../Assets/backgroundimg01.jpg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleRight } from '@fortawesome/free-solid-svg-icons';
+
 
 const HomePage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -38,7 +41,7 @@ const HomePage = () => {
 
       <div className="instant-report-section">
         <button className="instant-report-button" onClick={handleInstantReportClick}>
-          Get Instant Report Click Here
+          Check Your Vitals <FontAwesomeIcon icon={faCircleRight} fade size="2xl" style={{color: "#B197FC",}} />
         </button>
       </div>
 
@@ -59,13 +62,13 @@ const HomePage = () => {
 
       {paymentConfirmed && (
         <div className="redirecting-section">
-          <p>Redirecting to the CoWin BMI app...</p>
+          {/* <p>Redirecting to the CoWin BMI app...</p> */}
         </div>
       )}
 
       {/* Image and Parameters List */}
       <div className="image-parameters-section">
-        <img src={healthImage} alt="Health Check" className="health-image" />
+        {/* <img src={healthImage} alt="Health Check" className="health-image" /> */}
 
         <div className="parameters-section">
           <ul className="parameters-list left-list">

@@ -1,10 +1,10 @@
 /* HomePage.css */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&family=Poppins:wght@400&display=swap');
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f0f4f8; /* Light blue-gray background */
+    font-family: 'Nunito', sans-serif;
     background-image: linear-gradient(to top, #e8198b 0%, #c7eafd 100%);
-
   }
   
   .homepage-container {
@@ -36,8 +36,8 @@ body {
   }
   
   .subtitle {
-    font-size: 2.2em;
-    color: #666;
+    font-size: 2.5em;
+    color: #fff;
     margin: 20px 0;
     animation: fadeIn 2s ease-in-out;
   }
@@ -58,6 +58,7 @@ body {
 .image-parameters-section {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-top: 40px;
 }
 
@@ -70,7 +71,8 @@ body {
   .parameters-section {
     flex: 1;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 140px;
   }
   
   .parameters-list {
@@ -86,11 +88,12 @@ body {
     margin-bottom: 15px;
     display: flex;
     align-items: center;
+    padding: 10px;
   }
   
   .parameters-list i {
     margin-right: 10px;
-    color: #007BFF;
+    color: #fff;
   }
   
   
@@ -112,19 +115,32 @@ body {
   
   .instant-report-button {
     padding: 15px 30px;
-    font-size: 1.2em;
+    font-size: 2.2em;
     background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
   }
   
   .instant-report-button:hover {
     background-color: #0056b3;
   }
   
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
   .payment-section {
     margin: 40px 0;
     animation: fadeIn 1.5s ease-in-out;
@@ -201,6 +217,8 @@ body {
 .close-modal-button {
   background-color: #dc3545;
   margin-left: 10px;
+  padding: 12px 30px;
+  font-size: 15px;
 }
 
 .confirm-payment-button:hover,
