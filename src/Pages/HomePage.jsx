@@ -41,7 +41,7 @@ const HomePage = () => {
 
       <div className="instant-report-section">
         <button className="instant-report-button" onClick={handleInstantReportClick}>
-          Check Your Vitals <FontAwesomeIcon icon={faCircleRight} fade size="2xl" style={{color: "#B197FC",}} />
+          Check Your Vitals <FontAwesomeIcon icon={faCircleRight} shake size="2xl" style={{color: "#FFD43B",}} />
         </button>
       </div>
 
