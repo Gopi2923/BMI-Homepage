@@ -11,23 +11,34 @@ const HomePage = () => {
   const [upiLink, setUpiLink] = useState('');
   const [transactionId, setTransactionId] = useState('');
   const [paymentStatus, setPaymentStatus] = useState('pending'); // 'pending', 'success', 'failure'
+  const [intervalId, setIntervalId] = useState(null);
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  const clearPaymentCheck = () => {
+    if (intervalId) clearInterval(intervalId);
+    if (timeoutId) clearTimeout(timeoutId);
+    setIntervalId(null);
+    setTimeoutId(null);
+  };
 
   useEffect(() => {
-    let interval;
-    let timeout;
-    if (transactionId) {
-      interval = setInterval(() => checkPaymentSuccess(transactionId), 3000);
-      timeout = setTimeout(() => {
-        clearInterval(interval);
-        setPaymentStatus('failure');
+    if (transactionId && showPaymentModal) {
+      const newIntervalId = setInterval(() => checkPaymentSuccess(transactionId), 3000);
+      const newTimeoutId = setTimeout(() => {
+        if (paymentStatus !== 'success') {
+          setPaymentStatus('failure');
+          clearPaymentCheck();
+        }
       }, 180000); // 3 minutes timeout
+
+      setIntervalId(newIntervalId);
+      setTimeoutId(newTimeoutId);
+    } else {
+      clearPaymentCheck();
     }
 
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, [transactionId]);
+    return () => clearPaymentCheck();
+  }, [transactionId, showPaymentModal]);
 
   const generateOrderId = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000).toString();
@@ -35,19 +46,21 @@ const HomePage = () => {
 
   const checkPaymentSuccess = async (transactionId) => {
     try {
-      const response = await axios.get(`https://ssrvd.onrender.com/payment-gateway/paymentStatus/${transactionId}`);
+      const response = await axios.get(`https://kiosk-q5q4.onrender.com/payment-gateway/paymentStatus/${transactionId}`);
       if (response.data.data === true) {
         setPaymentStatus('success');
+        clearPaymentCheck();
       }
     } catch (error) {
       console.error('Error checking payment status:', error);
       setPaymentStatus('failure');
+      clearPaymentCheck();
     }
   };
 
   const handleInstantReportClick = async (e) => {
-    setShowPaymentModal(true);
     e.preventDefault();
+    setShowPaymentModal(true);
     const orderId = generateOrderId();
     try {
       const token = '367|qM5tv66Rhk8Tm13DlvDkc92KNwVMvAhOuljLB8tA';
@@ -84,6 +97,8 @@ const HomePage = () => {
 
     } catch (error) {
       console.error('Error submitting form:', error.response ? error.response.data : error.message);
+      setPaymentStatus('failure'); // Set payment status to failure on error
+      clearPaymentCheck();
     }
   };
 
@@ -93,6 +108,8 @@ const HomePage = () => {
 
   const closeModal = () => {
     setShowPaymentModal(false);
+    setPaymentStatus('pending'); // Reset payment status when closing the modal
+    clearPaymentCheck();
   };
 
   useEffect(() => {
@@ -100,6 +117,11 @@ const HomePage = () => {
       setTimeout(() => {
         redirectToAndroidApp();
       }, 2000); // Redirect after showing success modal for 2 seconds
+    } else if (paymentStatus === 'failure') {
+      setTimeout(() => {
+        setShowPaymentModal(false);
+        setPaymentStatus('pending');
+      }, 120000); // Close modal after showing failure modal for 2 seconds
     }
   }, [paymentStatus]);
 
@@ -127,28 +149,25 @@ const HomePage = () => {
           <div className="modal-content">
             {paymentStatus === 'pending' && (
               <>
-                <h2>Pay 99 INR to Proceed</h2>
+                <span className="close" onClick={closeModal}>&times;</span>
+                <h1 style={{color: "#007BFF"}}>Pay 99/- INR to Proceed</h1>
                 <QRCode value={upiLink} size={328} />
                 <div className="button-container">
-                  <button className="close-modal-button" onClick={closeModal}>
-                    Close
-                  </button>
                 </div>
               </>
             )}
             {paymentStatus === 'success' && (
               <div className="success-modal">
-                <h2>Payment Successful!</h2>
-                <FontAwesomeIcon icon={faCircleCheck} size="2xl" style={{color: "#0ff05e",}} />
+                <span className="close" onClick={closeModal}>&times;</span>
+                <h1>Payment Successful!</h1>
+                <FontAwesomeIcon icon={faCircleCheck} size="6x" style={{ color: "#0ff05e", }} />
               </div>
             )}
             {paymentStatus === 'failure' && (
               <div className="failure-modal">
-                <h2>Payment Failed</h2>
-                <FontAwesomeIcon icon={faCircleXmark} size="6x" style={{color: "#e00b2b",}} />
-                <button className="close-modal-button" onClick={closeModal}>
-                  Close
-                </button>
+                <span className="close" onClick={closeModal}>&times;</span>
+                <h1>Payment Failed, Please Try Again</h1>
+                <FontAwesomeIcon icon={faCircleXmark} size="6x" style={{ color: "#e00b2b", }} />
               </div>
             )}
           </div>
