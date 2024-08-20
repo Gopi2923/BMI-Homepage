@@ -4,7 +4,8 @@
 body {
     margin: 0;
     font-family: 'Nunito', sans-serif;
-    background-image: linear-gradient(to top, #e8198b 0%, #c7eafd 100%);
+   background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
+   /* background-image: linear-gradient(to top, #e8198b 0%, #c7eafd 100%); */
   }
   
   .homepage-container {
@@ -25,6 +26,10 @@ body {
     border-radius: 300px;
   }
   
+  .background-img {
+    width: 350px;
+    opacity: 0.5;
+  }
   .title {
     font-size: 3.5em;
     color: #fff;
@@ -37,7 +42,7 @@ body {
   
   .subtitle {
     font-size: 2.5em;
-    color: #fff;
+    color: #000;
     margin: 20px 0;
     animation: fadeIn 2s ease-in-out;
   }
@@ -93,9 +98,34 @@ body {
   
   .parameters-list i {
     margin-right: 10px;
-    color: #fff;
+    color: #007BFF;
   }
   
+  .parameters-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .parameters-list {
+    list-style: none;
+    padding: 0;
+    font-size: 1.4em;
+    color: #333;
+    margin: 0;
+  }
+  
+  .parameters-list li {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .parameters-list i {
+    margin-right: 10px;
+    color: #007BFF;
+  }
   
   .video-section {
     margin-top: 40px;
@@ -146,22 +176,6 @@ body {
     animation: fadeIn 1.5s ease-in-out;
   }
   
-  .confirm-payment-button {
-    margin-top: 20px;
-    padding: 10px 25px;
-    font-size: 1.1em;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-  }
-  
-  .confirm-payment-button:hover {
-    background-color: #218838;
-  }
-  
   .redirecting-section {
     margin-top: 40px;
     font-size: 1.2em;
@@ -206,29 +220,35 @@ body {
 .close-modal-button {
   display: inline-block;
   margin-top: 20px;
-  padding: 10px 20px;
+  padding: 12px 25px;
+  font-size: 16px;
   background-color: #28a745;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
 .close-modal-button {
   background-color: #dc3545;
-  margin-left: 10px;
-  padding: 12px 30px;
-  font-size: 15px;
+  margin-left: 15px;
 }
 
-.confirm-payment-button:hover,
-.close-modal-button:hover {
+.confirm-payment-button:hover {
   background-color: #218838;
 }
 
 .close-modal-button:hover {
   background-color: #c82333;
 }
+
+.button-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
 
   /* Rest of your existing CSS */
   
