@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import QRCode from 'qrcode.react';
 import './HomePage.css';
 import logo from '../Assets/logo.png';
@@ -14,12 +14,12 @@ const HomePage = () => {
   const [intervalId, setIntervalId] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
 
-  const clearPaymentCheck = () => {
+  const clearPaymentCheck = useCallback(() => {
     if (intervalId) clearInterval(intervalId);
     if (timeoutId) clearTimeout(timeoutId);
     setIntervalId(null);
     setTimeoutId(null);
-  };
+  }, [intervalId, timeoutId]);
 
   useEffect(() => {
     if (transactionId && showPaymentModal) {
@@ -44,7 +44,7 @@ const HomePage = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000).toString();
   };
 
-  const checkPaymentSuccess = async (transactionId) => {
+  const checkPaymentSuccess = useCallback(async (transactionId) => {
     try {
       const response = await axios.get(`https://kiosk-q5q4.onrender.com/payment-gateway/paymentStatus/${transactionId}`);
       if (response.data.data === true) {
@@ -56,7 +56,7 @@ const HomePage = () => {
       setPaymentStatus('failure');
       clearPaymentCheck();
     }
-  };
+  }, [clearPaymentCheck])
 
   const handleInstantReportClick = async (e) => {
     e.preventDefault();
