@@ -110,10 +110,14 @@ const HomePage = () => {
     }
   };
 
-  const redirectToAndroidApp = () => {
-    window.location.href = 'intent://launch/#Intent;package=com.burra.cowinemployees;end'; // Replace with the actual package name
-  };
+  // const redirectToAndroidApp = () => {
+  //   window.location.href = 'intent://launch/#Intent;package=com.burra.cowinemployees;end'; // Replace with the actual package name
+  // };
 
+  const redirectToAndroidApp = () => {
+    window.location.replace('intent://launch/#Intent;package=com.burra.cowinemployees;end');
+  };
+  
   const closeModal = () => {
     setShowPaymentModal(false);
     setPaymentStatus('pending'); // Reset payment status when closing the modal
