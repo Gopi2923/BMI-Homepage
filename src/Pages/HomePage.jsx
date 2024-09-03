@@ -10,7 +10,7 @@ const HomePage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [upiLink, setUpiLink] = useState('');
   const [transactionId, setTransactionId] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('pending'); // 'pending', 'success', 'failure'
+  const [paymentStatus, setPaymentStatus] = useState('pending');
   const [intervalId, setIntervalId] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
 
@@ -21,7 +21,9 @@ const HomePage = () => {
     setTimeoutId(null);
   }, [intervalId, timeoutId]);
 
-  const checkPaymentSuccess = useCallback(async (transactionId) => {
+  const checkPaymentSuccess = useCallback(async () => {
+    if (paymentStatus !== 'pending') return;
+
     try {
       const response = await axios.get(`https://kiosk-q5q4.onrender.com/payment-gateway/paymentStatus/${transactionId}`);
       if (response.data.data === true) {
@@ -33,27 +35,32 @@ const HomePage = () => {
       setPaymentStatus('failure');
       clearPaymentCheck();
     }
-  }, [clearPaymentCheck]);
-  
+  }, [clearPaymentCheck, transactionId, paymentStatus]);
+
   useEffect(() => {
-    if (transactionId && showPaymentModal && paymentStatus === 'pending') {
-      const newIntervalId = setInterval(() => checkPaymentSuccess(transactionId), 3000);
+    if (showPaymentModal && transactionId && paymentStatus === 'pending') {
+      // Start checking payment status immediately
+      checkPaymentSuccess();
+
+      // Continue checking payment status every 3 seconds
+      const newIntervalId = setInterval(checkPaymentSuccess, 3000);
+      setIntervalId(newIntervalId);
+
+      // Stop checking after 3 minutes
       const newTimeoutId = setTimeout(() => {
-        if (paymentStatus !== 'success') {
+        if (paymentStatus === 'pending') {
           setPaymentStatus('failure');
           clearPaymentCheck();
         }
       }, 180000); // 3 minutes timeout
-  
-      setIntervalId(newIntervalId);
+
       setTimeoutId(newTimeoutId);
-    } else {
-      clearPaymentCheck();
     }
-  
-    return () => clearPaymentCheck();
+
+    return () => {
+      clearPaymentCheck();
+    };
   }, [transactionId, showPaymentModal, paymentStatus, clearPaymentCheck, checkPaymentSuccess]);
-  
 
   const generateOrderId = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000).toString();
@@ -125,6 +132,7 @@ const HomePage = () => {
       }, 2000); // Close modal after showing failure modal for 2 seconds
     }
   }, [paymentStatus]);
+
 
   return (
     <div className="homepage-container">
