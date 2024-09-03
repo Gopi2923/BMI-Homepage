@@ -111,7 +111,7 @@ const HomePage = () => {
   };
 
   const redirectToAndroidApp = () => {
-    window.location.href = 'intent://launch/#Intent;package=com.example.cowinbmi;end'; // Replace with the actual package name
+    window.location.href = 'intent://launch/#Intent;package=com.burra.cowinemployees;end'; // Replace with the actual package name
   };
 
   const closeModal = () => {
