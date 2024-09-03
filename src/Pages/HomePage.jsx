@@ -30,15 +30,16 @@ const HomePage = () => {
           clearPaymentCheck();
         }
       }, 180000); // 3 minutes timeout
-
+  
       setIntervalId(newIntervalId);
       setTimeoutId(newTimeoutId);
     } else {
       clearPaymentCheck();
     }
-
+  
     return () => clearPaymentCheck();
-  }, [transactionId, showPaymentModal, paymentStatus, clearPaymentCheck]);
+  }, [transactionId, showPaymentModal, paymentStatus, clearPaymentCheck, checkPaymentSuccess]);
+  
 
   const generateOrderId = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000).toString();
