@@ -22,7 +22,7 @@ const HomePage = () => {
   }, [intervalId, timeoutId]);
 
   useEffect(() => {
-    if (transactionId && showPaymentModal) {
+    if (transactionId && showPaymentModal && paymentStatus === 'pending') {
       const newIntervalId = setInterval(() => checkPaymentSuccess(transactionId), 3000);
       const newTimeoutId = setTimeout(() => {
         if (paymentStatus !== 'success') {
@@ -38,7 +38,7 @@ const HomePage = () => {
     }
 
     return () => clearPaymentCheck();
-  }, [transactionId, showPaymentModal, checkPaymentSuccess, clearPaymentCheck, paymentStatus]);
+  }, [transactionId, showPaymentModal, paymentStatus, clearPaymentCheck]);
 
   const generateOrderId = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000).toString();
@@ -56,7 +56,7 @@ const HomePage = () => {
       setPaymentStatus('failure');
       clearPaymentCheck();
     }
-  }, [clearPaymentCheck])
+  }, [clearPaymentCheck]);
 
   const handleInstantReportClick = async (e) => {
     e.preventDefault();
@@ -121,7 +121,7 @@ const HomePage = () => {
       setTimeout(() => {
         setShowPaymentModal(false);
         setPaymentStatus('pending');
-      }, 120000); // Close modal after showing failure modal for 2 seconds
+      }, 2000); // Close modal after showing failure modal for 2 seconds
     }
   }, [paymentStatus]);
 
@@ -211,7 +211,8 @@ const HomePage = () => {
           className="video"
         ></iframe>
       </div>
-    </div>
+
+      </div>
   );
 };
 
