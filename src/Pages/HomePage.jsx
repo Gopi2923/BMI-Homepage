@@ -11,15 +11,6 @@ const HomePage = () => {
   const [upiLink, setUpiLink] = useState('');
   const [transactionId, setTransactionId] = useState('');
   const [paymentStatus, setPaymentStatus] = useState('pending');
-  const [intervalId, setIntervalId] = useState(null);
-  const [timeoutId, setTimeoutId] = useState(null);
-
-  const clearPaymentCheck = useCallback(() => {
-    if (intervalId) clearInterval(intervalId);
-    if (timeoutId) clearTimeout(timeoutId);
-    setIntervalId(null);
-    setTimeoutId(null);
-  }, [intervalId, timeoutId]);
 
   const checkPaymentSuccess = useCallback(async () => {
     if (paymentStatus !== 'pending') return;
@@ -28,39 +19,32 @@ const HomePage = () => {
       const response = await axios.get(`https://kiosk-q5q4.onrender.com/payment-gateway/paymentStatus/${transactionId}`);
       if (response.data.data === true) {
         setPaymentStatus('success');
-        clearPaymentCheck();
       }
     } catch (error) {
       console.error('Error checking payment status:', error);
       setPaymentStatus('failure');
-      clearPaymentCheck();
     }
-  }, [clearPaymentCheck, transactionId, paymentStatus]);
+  }, [transactionId, paymentStatus]);
 
   useEffect(() => {
+    let timeoutId;
+    let intervalId;
+
     if (showPaymentModal && transactionId && paymentStatus === 'pending') {
-      // Start checking payment status immediately
-      checkPaymentSuccess();
+      intervalId = setInterval(checkPaymentSuccess, 3000); // Check every 3 seconds
 
-      // Continue checking payment status every 3 seconds
-      const newIntervalId = setInterval(checkPaymentSuccess, 3000);
-      setIntervalId(newIntervalId);
-
-      // Stop checking after 3 minutes
-      const newTimeoutId = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         if (paymentStatus === 'pending') {
-          setPaymentStatus('failure');
-          clearPaymentCheck();
+          setPaymentStatus('failure'); // Set to failure if still pending after 2 minutes
         }
-      }, 180000); // 3 minutes timeout
-
-      setTimeoutId(newTimeoutId);
+      }, 120000); // 2 minutes timeout
     }
 
     return () => {
-      clearPaymentCheck();
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
     };
-  }, [transactionId, showPaymentModal, paymentStatus, clearPaymentCheck, checkPaymentSuccess]);
+  }, [transactionId, showPaymentModal, paymentStatus, checkPaymentSuccess]);
 
   const generateOrderId = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000).toString();
@@ -106,7 +90,6 @@ const HomePage = () => {
     } catch (error) {
       console.error('Error submitting form:', error.response ? error.response.data : error.message);
       setPaymentStatus('failure'); // Set payment status to failure on error
-      clearPaymentCheck();
     }
   };
 
@@ -121,7 +104,6 @@ const HomePage = () => {
   const closeModal = () => {
     setShowPaymentModal(false);
     setPaymentStatus('pending'); // Reset payment status when closing the modal
-    clearPaymentCheck();
   };
 
   useEffect(() => {
@@ -136,7 +118,6 @@ const HomePage = () => {
       }, 2000); // Close modal after showing failure modal for 2 seconds
     }
   }, [paymentStatus]);
-
 
   return (
     <div className="homepage-container">
@@ -165,8 +146,6 @@ const HomePage = () => {
                 <span className="close" onClick={closeModal}>&times;</span>
                 <h1 style={{color: "#007BFF"}}>Pay 99/- INR to Proceed</h1>
                 <QRCode value={upiLink} size={328} />
-                <div className="button-container">
-                </div>
               </>
             )}
             {paymentStatus === 'success' && (
@@ -224,8 +203,7 @@ const HomePage = () => {
           className="video"
         ></iframe>
       </div>
-
-      </div>
+    </div>
   );
 };
 
