@@ -21,6 +21,20 @@ const HomePage = () => {
     setTimeoutId(null);
   }, [intervalId, timeoutId]);
 
+  const checkPaymentSuccess = useCallback(async (transactionId) => {
+    try {
+      const response = await axios.get(`https://kiosk-q5q4.onrender.com/payment-gateway/paymentStatus/${transactionId}`);
+      if (response.data.data === true) {
+        setPaymentStatus('success');
+        clearPaymentCheck();
+      }
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+      setPaymentStatus('failure');
+      clearPaymentCheck();
+    }
+  }, [clearPaymentCheck]);
+  
   useEffect(() => {
     if (transactionId && showPaymentModal && paymentStatus === 'pending') {
       const newIntervalId = setInterval(() => checkPaymentSuccess(transactionId), 3000);
@@ -44,20 +58,6 @@ const HomePage = () => {
   const generateOrderId = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000).toString();
   };
-
-  const checkPaymentSuccess = useCallback(async (transactionId) => {
-    try {
-      const response = await axios.get(`https://kiosk-q5q4.onrender.com/payment-gateway/paymentStatus/${transactionId}`);
-      if (response.data.data === true) {
-        setPaymentStatus('success');
-        clearPaymentCheck();
-      }
-    } catch (error) {
-      console.error('Error checking payment status:', error);
-      setPaymentStatus('failure');
-      clearPaymentCheck();
-    }
-  }, [clearPaymentCheck]);
 
   const handleInstantReportClick = async (e) => {
     e.preventDefault();
