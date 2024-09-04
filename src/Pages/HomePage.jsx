@@ -122,12 +122,13 @@ const HomePage = () => {
   return (
     <div className="homepage-container">
       {/* Logo */}
-      <div className="image-container">
-        <img src={logo} alt="Atmaprikash Logo" className="logo" />
-      </div>
+      <div className="header-container">
+  <div className="image-container">
+    <img src={logo} alt="Atmaprikash Logo" className="logo" />
+  </div>
+  <h1 className="title">Health ATM (Vitals Checking Machine)</h1>
+</div>
 
-      {/* Title */}
-      <h1 className="title">Health ATM (Vitals Checking Machine)</h1>
 
       {/* Subheading */}
       <p className="subtitle">Check Your Vitals, Instant Report</p>
