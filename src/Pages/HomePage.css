@@ -20,7 +20,7 @@ body {
   }
   
   .logo {
-    width: 350px;
+    width: 200px;
     margin: 20px auto;
     animation: fadeIn 2s ease-in-out;
     border-radius: 300px;
@@ -34,7 +34,7 @@ body {
     font-size: 3.5em;
     color: #fff;
     margin-top: 10px;
-    padding: 30px;
+    padding: 20px;
     animation: slideIn 1.5s ease-in-out;
     background-image: linear-gradient(to top, #cc208e 0%, #6713d2 100%);
     border-radius: 50px;
@@ -46,7 +46,7 @@ body {
   .subtitle {
     font-size: 2.5em;
     color: #000;
-    margin: 20px 0;
+    margin: 10px 0;
     animation: fadeIn 2s ease-in-out;
   }
   
@@ -80,16 +80,15 @@ body {
     flex: 1;
     display: flex;
     justify-content: center;
-    gap: 140px;
   }
   
   .parameters-list {
     list-style: none;
     padding: 5px;
-    font-size: 2em;
+    font-size: 1em;
     color: #333;
     text-align: left;
-    margin-top: 25px;
+    margin-top: 5px;
   }
   
   .parameters-list li {
@@ -131,7 +130,7 @@ body {
   }
   
   .video-section {
-    margin-top: 40px;
+    margin-top: 10px;
     animation: fadeInUp 2s ease-in-out;
   }
   
@@ -143,7 +142,7 @@ body {
   /* HomePage.css */
 
 .instant-report-section {
-    margin: 40px 0;
+    margin: 20px 0;
   }
   
   .instant-report-button {
@@ -152,7 +151,7 @@ body {
     background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 15px;
+    border-radius: 50px;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
     transition: all 0.3s ease;
@@ -190,10 +189,10 @@ body {
 
 .video {
   width: 100%;
-  height: 554px;
+  height: 354px;
   max-width: 100%;
   border-radius: 10px;
-  margin-top: 20px;
+  margin-top: 0px;
 }
 
 /* HomePage.css */
