@@ -23,9 +23,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
     background-color: transparent;
-    margin-bottom: 20px;
   }
   
   .logo {
