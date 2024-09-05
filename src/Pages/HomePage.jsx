@@ -138,10 +138,9 @@ const HomePage = () => {
       <div className="instant-report-section">
         <button className="instant-report-button" onClick={handleInstantReportClick}>
           Check Your Vitals  <img src={click} alt="" style={{width: "50px", borderRadius: '50px'}} />
-          {/* <FontAwesomeIcon icon={faCircleRight} shake size="2xl" style={{ color: "#FFD43B" }} /> */}
         </button>
       </div>
-
+      {/* <FontAwesomeIcon icon={faCircleRight} shake size="2xl" style={{ color: "#FFD43B" }} /> */}
       {showPaymentModal && (
         <div className="modal-overlay">
           <div className="modal-content">
