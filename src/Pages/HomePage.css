@@ -149,22 +149,30 @@ body {
   
   /* HomePage.css */
 
-.instant-report-section {
-    margin: 20px 0;
-  }
-  
-  .instant-report-button {
+  .instant-report-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.instant-report-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px 40px;
     font-size: 2em;
     background-color: #007BFF;
     color: white;
+    gap: 20px;
     border: none;
     border-radius: 50px;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
     transition: all 0.3s ease;
     animation: pulse 2s infinite;
-  }
+}
+
   
   .instant-report-button:hover {
     background-color: #0056b3;

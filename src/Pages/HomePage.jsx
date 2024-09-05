@@ -2,9 +2,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import QRCode from 'qrcode.react';
 import './HomePage.css';
 import logo from '../Assets/logo.png';
+import click from '../Assets/click.gif';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleRight, faCircleXmark, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { width } from '@fortawesome/free-solid-svg-icons/fa0';
 
 const HomePage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -135,7 +137,8 @@ const HomePage = () => {
 
       <div className="instant-report-section">
         <button className="instant-report-button" onClick={handleInstantReportClick}>
-          Check Your Vitals <FontAwesomeIcon icon={faCircleRight} shake size="2xl" style={{ color: "#FFD43B" }} />
+          Check Your Vitals  <img src={click} alt="" style={{width: "50px", borderRadius: '50px'}} />
+          {/* <FontAwesomeIcon icon={faCircleRight} shake size="2xl" style={{ color: "#FFD43B" }} /> */}
         </button>
       </div>
 
