@@ -4,9 +4,8 @@ import './HomePage.css';
 import logo from '../Assets/logo.png';
 import click from '../Assets/click.gif';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleRight, faCircleXmark, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { width } from '@fortawesome/free-solid-svg-icons/fa0';
 
 const HomePage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
