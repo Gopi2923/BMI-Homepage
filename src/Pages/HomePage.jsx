@@ -129,9 +129,6 @@ const HomePage = () => {
   </div>
   <h1 className="title">Health ATM (Vitals Checking Machine)</h1>
 </div>
-
-
-      {/* Subheading */}
       <p className="subtitle">Check Your Vitals, Instant Report</p>
 
       <div className="instant-report-section">
