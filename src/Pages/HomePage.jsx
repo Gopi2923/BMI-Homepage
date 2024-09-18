@@ -123,8 +123,8 @@ const HomePage = () => {
                   <>
                     <h2>Select Amount</h2>
                     <div className="amount-options">
-                      <button onClick={() => handleAmountOptionClick(40)}>40/-</button>
-                      <button onClick={() => handleAmountOptionClick(99)}>99/-</button>
+                      <button onClick={() => handleAmountOptionClick(40)}>&#8377; 40/-</button>
+                      <button onClick={() => handleAmountOptionClick(99)}>&#8377; 99/-</button>
                     </div>
                   </>
                 )}
