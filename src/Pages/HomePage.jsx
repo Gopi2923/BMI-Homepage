@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './HomePage.css';
 import logo from '../Assets/logo.png';
 import click from '../Assets/click.gif';
@@ -10,8 +10,6 @@ import qrimg1 from '../Assets/qr-img-40.jpeg';
 import qrimg2 from '../Assets/qr-img-99.jpeg';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-// No need to call toast.configure() separately
 
 const HomePage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -75,6 +73,19 @@ const HomePage = () => {
       });
   };
 
+  // Redirect to the Android app if payment is successful
+  useEffect(() => {
+    if (paymentStatus === 'success') {
+      const redirectToAndroidApp = () => {
+        window.location.href = 'intent://launch/#Intent;scheme=https;package=com.burra.cowinemployees;end';
+      };
+      
+      setTimeout(() => {
+        redirectToAndroidApp();
+      }, 3000); // Redirect after 3 seconds
+    }
+  }, [paymentStatus]);
+
   // Ensure the modal only closes when payment status is 'success'
   const closeModal = () => {
     setShowPaymentModal(false);
@@ -82,7 +93,6 @@ const HomePage = () => {
     setAmountOption(null);
     setPaymentStatus('pending'); // Reset payment status when closing the modal
   };
-  
 
   return (
     <div className="homepage-container">
