@@ -77,13 +77,12 @@ const HomePage = () => {
 
   // Ensure the modal only closes when payment status is 'success'
   const closeModal = () => {
-    if (paymentStatus === 'success') {
-      setShowPaymentModal(false);
-      setPaymentOption('');
-      setAmountOption(null);
-      setPaymentStatus('pending'); // Reset when closing the modal
-    }
+    setShowPaymentModal(false);
+    setPaymentOption('');
+    setAmountOption(null);
+    setPaymentStatus('pending'); // Reset payment status when closing the modal
   };
+  
 
   return (
     <div className="homepage-container">
