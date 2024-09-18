@@ -328,7 +328,8 @@ h3 {
 }
 
 .success-modal h1 {
-  color: #0ff05e;
+  color: #218838;
+  font-size: 3em;
 }
 
 .success-modal .fa-circle-check {

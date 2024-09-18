@@ -154,7 +154,7 @@ const HomePage = () => {
             {paymentStatus === 'success' && (
               <div className="success-modal">
                 <h1>Payment Successful!</h1>
-                <FontAwesomeIcon icon={faCircleCheck} size="6x" style={{ color: "#0ff05e" }} />
+                <FontAwesomeIcon icon={faCircleCheck} size="6x" style={{ color: "#218838" }} />
               </div>
             )}
           </div>
