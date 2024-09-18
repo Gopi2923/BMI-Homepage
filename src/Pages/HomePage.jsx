@@ -1,165 +1,161 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import QRCode from 'qrcode.react';
+import React, { useState } from 'react';
 import './HomePage.css';
 import logo from '../Assets/logo.png';
 import click from '../Assets/click.gif';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import ParameterList from '../Components/ParameterList';
+import YoutubeVideo from '../Components/YoutubeVideo';
+import qrimg1 from '../Assets/qr-img-40.jpeg';
+import qrimg2 from '../Assets/qr-img-99.jpeg';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// No need to call toast.configure() separately
 
 const HomePage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [upiLink, setUpiLink] = useState('');
-  const [transactionId, setTransactionId] = useState('');
+  const [paymentOption, setPaymentOption] = useState('');
+  const [amountOption, setAmountOption] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState('pending');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const checkPaymentSuccess = useCallback(async () => {
-    if (paymentStatus !== 'pending') return;
-
-    try {
-      const response = await axios.get(`https://kiosk-q5q4.onrender.com/payment-gateway/paymentStatus/${transactionId}`);
-      if (response.data.data === true) {
-        setPaymentStatus('success');
-      }
-    } catch (error) {
-      console.error('Error checking payment status:', error);
-      setPaymentStatus('failure');
-    }
-  }, [transactionId, paymentStatus]);
-
-  useEffect(() => {
-    let timeoutId;
-    let intervalId;
-
-    if (showPaymentModal && transactionId && paymentStatus === 'pending') {
-      intervalId = setInterval(checkPaymentSuccess, 3000); // Check every 3 seconds
-
-      timeoutId = setTimeout(() => {
-        if (paymentStatus === 'pending') {
-          setPaymentStatus('failure'); // Set to failure if still pending after 2 minutes
-        }
-      }, 120000); // 2 minutes timeout
-    }
-
-    return () => {
-      clearInterval(intervalId);
-      clearTimeout(timeoutId);
-    };
-  }, [transactionId, showPaymentModal, paymentStatus, checkPaymentSuccess]);
-
-  const generateOrderId = () => {
-    return Math.floor(1000000000 + Math.random() * 9000000000).toString();
-  };
-
-  const handleInstantReportClick = async (e) => {
-    e.preventDefault();
+  const handleInstantReportClick = () => {
     setShowPaymentModal(true);
-    const orderId = generateOrderId();
-    try {
-      const token = '367|qM5tv66Rhk8Tm13DlvDkc92KNwVMvAhOuljLB8tA';
-      const transactionData = {
-        amount: '1',
-        description: 'Health ATM Report',
-        name: 'Gopi',
-        email: 'dhanushnm07@gmail.com',
-        mobile: Number('1234567890'),
-        enabledModesOfPayment: 'upi',
-        payment_method: 'UPI_INTENT',
-        source: 'api',
-        order_id: orderId,
-        user_uuid: 'swp_sm_903dd099-3a9e-4243-ac1e-f83f83c30725',
-        other_info: 'api',
-        encrypt_response: 0
-      };
+  };
 
-      const formData2 = new FormData();
-      for (const key in transactionData) {
-        formData2.append(key, transactionData[key]);
-      }
+  const handlePaymentOptionClick = (option) => {
+    setPaymentOption(option);
+    setAmountOption(null); // Reset the amount selection
+  };
 
-      const transactionResponse = await axios.post('https://www.switchpay.in/api/createTransaction', formData2, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+  const handleAmountOptionClick = (amount) => {
+    setAmountOption(amount);
+  };
+
+  const handleConfirmPayment = () => {
+    const payload = {
+      amount: amountOption,
+      name: 'Dhanush',
+      mobile: 1234567890,
+      paymentMethod: paymentOption,
+    };
+
+    setIsLoading(true);
+
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+      toast.error('Payment is taking too long, please try again later.');
+    }, 60000); // 1 minute timeout
+
+    fetch('https://kiosk-q5q4.onrender.com/user-reciept/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to process payment. Please try again.');
         }
+        return response.json();
+      })
+      .then((data) => {
+        clearTimeout(timeout); // Clear the timeout if the API succeeds
+        setIsLoading(false);
+        setPaymentStatus('success');
+        toast.success('Payment successful!');
+      })
+      .catch((error) => {
+        clearTimeout(timeout); // Clear the timeout if there's an error
+        setIsLoading(false);
+        toast.error(error.message || 'Payment failed. Please try again.');
+        setPaymentStatus('failed'); // Set payment status to failed
       });
-
-      const { upi_intent_link, transaction_id } = transactionResponse.data;
-      setUpiLink(upi_intent_link);
-      setTransactionId(transaction_id);
-
-    } catch (error) {
-      console.error('Error submitting form:', error.response ? error.response.data : error.message);
-      setPaymentStatus('failure'); // Set payment status to failure on error
-    }
   };
 
-  const redirectToAndroidApp = () => {
-    window.location.href = 'intent://launch/#Intent;scheme=https;package=com.burra.cowinemployees;end';
-  };
-  
-
-  // const redirectToAndroidApp = () => {
-  //   window.location.replace('intent://launch/#Intent;package=com.burra.cowinemployees;end');
-  // };
-  
+  // Ensure the modal only closes when payment status is 'success'
   const closeModal = () => {
-    setShowPaymentModal(false);
-    setPaymentStatus('pending'); // Reset payment status when closing the modal
-  };
-
-  useEffect(() => {
     if (paymentStatus === 'success') {
-      setTimeout(() => {
-        redirectToAndroidApp();
-      }, 2000); // Redirect after showing success modal for 2 seconds
-    } else if (paymentStatus === 'failure') {
-      setTimeout(() => {
-        setShowPaymentModal(false);
-        setPaymentStatus('pending');
-      }, 2000); // Close modal after showing failure modal for 2 seconds
+      setShowPaymentModal(false);
+      setPaymentOption('');
+      setAmountOption(null);
+      setPaymentStatus('pending'); // Reset when closing the modal
     }
-  }, [paymentStatus]);
+  };
 
   return (
     <div className="homepage-container">
       {/* Logo */}
       <div className="header-container">
-  <div className="image-container">
-    <img src={logo} alt="Atmaprikash Logo" className="logo" />
-  </div>
-  <h1 className="title">Health ATM (Vitals Checking Machine)</h1>
-</div>
+        <div className="image-container">
+          <img src={logo} alt="Atmaprikash Logo" className="logo" />
+        </div>
+        <h1 className="title">Health ATM (Vitals Checking Machine)</h1>
+      </div>
       <p className="subtitle">Check Your Vitals, Instant Report</p>
 
       <div className="instant-report-section">
         <button className="instant-report-button" onClick={handleInstantReportClick}>
-          Check Your Vitals  <img src={click} alt="" style={{width: "50px", borderRadius: '50px'}} />
+          Check Your Vitals
+          <img src={click} alt="" style={{ width: "50px", borderRadius: '50px' }} />
         </button>
       </div>
-      {/* <FontAwesomeIcon icon={faCircleRight} shake size="2xl" style={{ color: "#FFD43B" }} /> */}
+
       {showPaymentModal && (
         <div className="modal-overlay">
           <div className="modal-content">
+            <span className="close" onClick={closeModal}>&times;</span>
+
             {paymentStatus === 'pending' && (
               <>
-                <span className="close" onClick={closeModal}>&times;</span>
-                <h1 style={{color: "#007BFF"}}>Pay 99/- INR to Proceed</h1>
-                <QRCode value={upiLink} size={328} />
+                {!paymentOption ? (
+                  <>
+                    <h1>Select Payment Option</h1>
+                    <div className="payment-options">
+                      <button onClick={() => handlePaymentOptionClick('QR')}>QR Code</button>
+                      <button onClick={() => handlePaymentOptionClick('Cash')}>Cash</button>
+                    </div>
+                  </>
+                ) : null}
+
+                {paymentOption && !amountOption && (
+                  <>
+                    <h2>Select Amount</h2>
+                    <div className="amount-options">
+                      <button onClick={() => handleAmountOptionClick(40)}>40/-</button>
+                      <button onClick={() => handleAmountOptionClick(99)}>99/-</button>
+                    </div>
+                  </>
+                )}
+
+                {amountOption && paymentOption === 'QR' && (
+                  <>
+                    <h3>Scan the QR Code for {amountOption}/-</h3>
+                    {amountOption === 40 && <img src={qrimg1} alt="QR Code for 40 INR" className="qr-code-image" />}
+                    {amountOption === 99 && <img src={qrimg2} alt="QR Code for 99 INR" className="qr-code-image" />}
+                    <button className="confirm-payment-button" onClick={handleConfirmPayment} disabled={isLoading}>
+                      {isLoading ? 'Processing...' : 'Confirm Payment'}
+                    </button>
+                  </>
+                )}
+
+                {amountOption && paymentOption === 'Cash' && (
+                  <>
+                    <h3>You have selected to pay {amountOption}/- by Cash</h3>
+                    <button className="confirm-payment-button" onClick={handleConfirmPayment} disabled={isLoading}>
+                      {isLoading ? 'Processing...' : 'Confirm Payment'}
+                    </button>
+                  </>
+                )}
               </>
             )}
+
             {paymentStatus === 'success' && (
               <div className="success-modal">
-                <span className="close" onClick={closeModal}>&times;</span>
                 <h1>Payment Successful!</h1>
-                <FontAwesomeIcon icon={faCircleCheck} size="6x" style={{ color: "#0ff05e", }} />
-              </div>
-            )}
-            {paymentStatus === 'failure' && (
-              <div className="failure-modal">
-                <span className="close" onClick={closeModal}>&times;</span>
-                <h1>Payment Failed, Please Try Again</h1>
-                <FontAwesomeIcon icon={faCircleXmark} size="6x" style={{ color: "#e00b2b", }} />
+                <FontAwesomeIcon icon={faCircleCheck} size="6x" style={{ color: "#0ff05e" }} />
               </div>
             )}
           </div>
@@ -167,42 +163,10 @@ const HomePage = () => {
       )}
 
       {/* Image and Parameters List */}
-      <div className="image-parameters-section">
-        <div className="parameters-section">
-          <ul className="parameters-list left-list">
-            <li><i className="fas fa-user"></i> Age / ವಯಸ್ಸು</li>
-            <li><i className="fas fa-ruler-vertical"></i> Height / ಎತ್ತರ</li>
-            <li><i className="fas fa-weight"></i> Weight / ತೂಕ</li>
-            <li><i className="fas fa-calculator"></i> Body Mass Index / ದೇಹದ ಮಾಪಕ</li>
-            <li><i className="fas fa-apple-alt"></i> Nutritional Status / ಪೋಷಕ ಸ್ಥಿತಿ</li>
-            <li><i className="fas fa-weight-hanging"></i> Ideal Body Weight / ಆದರ್ಶ ದೇಹದ ತೂಕ</li>
-            <li><i className="fas fa-percentage"></i> Body Fat / ದೇಹದ ಕೊಬ್ಬು</li>
-          </ul>
-          <ul className="parameters-list right-list">
-            <li><i className="fas fa-water"></i> Total Body Water / ಒಟ್ಟು ದೇಹದ ನೀರು</li>
-            <li><i className="fas fa-burn"></i> Basal Metabolic Rate / ಮೂಲವ್ಯೂಪಚಯ ದರ</li>
-            <li><i className="fas fa-weight"></i> Fat Mass / ಕೊಬ್ಬಿನ ಪ್ರಮಾಣ</li>
-            <li><i className="fas fa-dumbbell"></i> Lean/Skeletal Body Mass / ಕುಳಿತ ದೇಹದ ಪ್ರಮಾಣ</li>
-            <li><i className="fas fa-exclamation-circle"></i> Overweight By / ಅಧಿಕ ತೂಕದ ಮೂಲಕ</li>
-            <li><i className="fas fa-clipboard-check"></i> Recommendations / ಶಿಫಾರಸುಗಳು</li>
-            <li><i className="fas fa-star"></i> Your Lucky Message / ನಿಮ್ಮ ಭಾಗ್ಯದ ಸಂದೇಶ</li>
-          </ul>
-        </div>
-      </div>
+      <ParameterList />
 
       {/* Video Section */}
-      <div className="video-section">
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/Erhv6vECfPU?autoplay=1&loop=1&playlist=Erhv6vECfPU"
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="video"
-        ></iframe>
-      </div>
+      <YoutubeVideo />
     </div>
   );
 };
