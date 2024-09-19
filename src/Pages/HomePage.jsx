@@ -183,7 +183,7 @@ const HomePage = () => {
 
       {/* Video Section */}
       <YoutubeVideo />
-      <button onClick={() => window.location.href = 'intent://launch/#Intent;scheme=https;package=com.burra.cowinemployees;end'}>Launch Android App</button>
+      {/* <button onClick={() => window.location.href = 'intent://launch/#Intent;scheme=https;package=com.burra.cowinemployees;end'}>Launch Android App</button> */}
     </div>
   );
 };
