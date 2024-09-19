@@ -17,6 +17,7 @@ const HomePage = () => {
   const [amountOption, setAmountOption] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState('pending');
   const [isLoading, setIsLoading] = useState(false);
+  const [apiTimeoutReached, setApiTimeoutReached] = useState(false); // Track if timeout was reached
 
   const handleInstantReportClick = () => {
     setShowPaymentModal(true);
@@ -42,6 +43,7 @@ const HomePage = () => {
     setIsLoading(true);
 
     const timeout = setTimeout(() => {
+      setApiTimeoutReached(true); // Mark the timeout as reached
       setIsLoading(false);
       toast.error('Payment is taking too long, please try again later.');
     }, 60000); // 1 minute timeout
@@ -60,16 +62,20 @@ const HomePage = () => {
         return response.json();
       })
       .then((data) => {
-        clearTimeout(timeout); // Clear the timeout if the API succeeds
-        setIsLoading(false);
-        setPaymentStatus('success');
-        toast.success('Payment successful!');
+        if (!apiTimeoutReached) {
+          clearTimeout(timeout); // Clear the timeout if the API succeeds before 1 minute
+          setIsLoading(false);
+          setPaymentStatus('success');
+          toast.success('Payment successful!');
+        }
       })
       .catch((error) => {
-        clearTimeout(timeout); // Clear the timeout if there's an error
-        setIsLoading(false);
-        toast.error(error.message || 'Payment failed. Please try again.');
-        setPaymentStatus('failed'); // Set payment status to failed
+        if (!apiTimeoutReached) {
+          clearTimeout(timeout); // Clear the timeout if there's an error before 1 minute
+          setIsLoading(false);
+          toast.error(error.message || 'Payment failed. Please try again.');
+          setPaymentStatus('failed'); // Set payment status to failed
+        }
       });
   };
 
@@ -92,6 +98,7 @@ const HomePage = () => {
     setPaymentOption('');
     setAmountOption(null);
     setPaymentStatus('pending'); // Reset payment status when closing the modal
+    setApiTimeoutReached(false); // Reset timeout reached state
   };
 
   return (
@@ -176,6 +183,7 @@ const HomePage = () => {
 
       {/* Video Section */}
       <YoutubeVideo />
+      <button onClick={() => window.location.href = 'intent://launch/#Intent;scheme=https;package=com.burra.cowinemployees;end'}>Launch Android App</button>
     </div>
   );
 };
