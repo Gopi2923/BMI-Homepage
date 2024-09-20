@@ -1,12 +1,12 @@
 const CACHE_NAME = 'vitals-check-cache-v1';
 const urlsToCache = [
   '/',
-  '/public/index.html',
-  '/src/Assets/logo.png',
-  '/src/Assets/click.gif',
-  '/src/Assets/qr-img-40.jpeg',
-  '/src/Assets/qr-img-99.jpeg',
-  '/offline.html', // Make sure you also cache your offline.html
+  '/index.html',
+  '/Assets/logo.png',
+  '/Assets/click.gif',
+  '/Assets/qr-img-40.jpeg',
+  '/Assets/qr-img-99.jpeg',
+  '/offline.html',
 ];
 
 // Install the service worker and cache files
@@ -22,11 +22,12 @@ self.addEventListener('install', (event) => {
 // Fetch requests and serve cached files if available
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request).then((response) => {
-        return response || caches.match('/offline.html'); // Serve offline page if the resource is not cached
-      });
-    })
+    fetch(event.request)
+      .catch(() => {
+        return caches.match(event.request).then((response) => {
+          return response || caches.match('/offline.html');
+        });
+      })
   );
 });
 
