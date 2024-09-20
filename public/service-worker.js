@@ -6,6 +6,7 @@ const urlsToCache = [
   '/src/Assets/click.gif',
   '/src/Assets/qr-img-40.jpeg',
   '/src/Assets/qr-img-99.jpeg',
+  '/offline.html', // Make sure you also cache your offline.html
 ];
 
 // Install the service worker and cache files
@@ -22,10 +23,9 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request).catch(() => {
-      return caches.match(event.request)
-        .then((response) => {
-          return response || caches.match('/offline.html'); // Serve offline page if the resource is not cached
-        });
+      return caches.match(event.request).then((response) => {
+        return response || caches.match('/offline.html'); // Serve offline page if the resource is not cached
+      });
     })
   );
 });
@@ -37,7 +37,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
+          if (!cacheWhitelist.includes(cacheName)) {
             return caches.delete(cacheName);
           }
         })
