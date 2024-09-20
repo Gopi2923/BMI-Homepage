@@ -17,7 +17,6 @@ const HomePage = () => {
   const [amountOption, setAmountOption] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState('pending');
   const [isLoading, setIsLoading] = useState(false);
-  const [apiTimeoutReached, setApiTimeoutReached] = useState(false); // Track if timeout was reached
 
   const handleInstantReportClick = () => {
     setShowPaymentModal(true);
@@ -42,12 +41,21 @@ const HomePage = () => {
 
     setIsLoading(true);
 
-    const timeout = setTimeout(() => {
-      setApiTimeoutReached(true); // Mark the timeout as reached
+    // Check if online
+    if (navigator.onLine) {
+      // Proceed with online payment
+      processPayment(payload);
+    } else {
+      // Store payment data in localStorage
+      localStorage.setItem('offlinePayment', JSON.stringify(payload));
       setIsLoading(false);
-      toast.error('Payment is taking too long, please try again later.');
-    }, 60000); // 1 minute timeout
+      toast.warning('You are offline. Payment will be processed once you are online.');
+      setPaymentStatus('success'); // Set to success for the user feedback
+    }
+  };
 
+  // Function to process payment
+  const processPayment = (payload) => {
     fetch('https://kiosk-q5q4.onrender.com/user-reciept/add', {
       method: 'POST',
       headers: {
@@ -62,22 +70,33 @@ const HomePage = () => {
         return response.json();
       })
       .then((data) => {
-        if (!apiTimeoutReached) {
-          clearTimeout(timeout); // Clear the timeout if the API succeeds before 1 minute
-          setIsLoading(false);
-          setPaymentStatus('success');
-          toast.success('Payment successful!');
-        }
+        setIsLoading(false);
+        setPaymentStatus('success');
+        toast.success('Payment successful!');
       })
       .catch((error) => {
-        if (!apiTimeoutReached) {
-          clearTimeout(timeout); // Clear the timeout if there's an error before 1 minute
-          setIsLoading(false);
-          toast.error(error.message || 'Payment failed. Please try again.');
-          setPaymentStatus('failed'); // Set payment status to failed
-        }
+        setIsLoading(false);
+        toast.error('Payment failed. Please try again.');
+        setPaymentStatus('failed');
       });
   };
+
+  useEffect(() => {
+    const syncOfflinePayments = () => {
+      const offlinePayment = localStorage.getItem('offlinePayment');
+      if (offlinePayment) {
+        const paymentData = JSON.parse(offlinePayment);
+        processPayment(paymentData);
+        localStorage.removeItem('offlinePayment'); // Clear offline data after syncing
+      }
+    };
+
+    window.addEventListener('online', syncOfflinePayments);
+
+    return () => {
+      window.removeEventListener('online', syncOfflinePayments);
+    };
+  }, []);
 
   // Redirect to the Android app if payment is successful
   useEffect(() => {
@@ -85,7 +104,7 @@ const HomePage = () => {
       const redirectToAndroidApp = () => {
         window.location.href = 'intent://launch/#Intent;scheme=https;package=com.burra.cowinemployees;end';
       };
-      
+
       setTimeout(() => {
         redirectToAndroidApp();
       }, 3000); // Redirect after 3 seconds
@@ -98,12 +117,10 @@ const HomePage = () => {
     setPaymentOption('');
     setAmountOption(null);
     setPaymentStatus('pending'); // Reset payment status when closing the modal
-    setApiTimeoutReached(false); // Reset timeout reached state
   };
 
   return (
     <div className="homepage-container">
-      {/* Logo */}
       <div className="header-container">
         <div className="image-container">
           <img src={logo} alt="Atmaprikash Logo" className="logo" />
@@ -178,12 +195,8 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Image and Parameters List */}
       <ParameterList />
-
-      {/* Video Section */}
       <YoutubeVideo />
-      {/* <button onClick={() => window.location.href = 'intent://launch/#Intent;scheme=https;package=com.burra.cowinemployees;end'}>Launch Android App</button> */}
     </div>
   );
 };
